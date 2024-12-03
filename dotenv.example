@@ -1,0 +1,10 @@
+SECRET_KEY="django-insecure-4pe9lb$zcxmc_o2rsgn+ft(7^=5-o0q=*bvw)15-6fc%el$en("
+DB_NAME="maykinmedia"
+DB_USER="maykinmedia"
+#
+# For peer authentication via unix domain socket
+# these should be kept empty.
+#
+DB_PASSWORD=""
+DB_HOST=""
+DB_PORT=""
