@@ -59,11 +59,9 @@ To run a Django project from this repository, you will need to follow a series o
 
 Data
 ####
-The data is retrieved from an authenticated HTTP server where two CSV-files are located. One of the files contains cities (PK and name) and the other contains hotels (PK, FK to city and name). See the simple datamodel below:
+The data is retrieved from an authenticated HTTP server where two CSV-files are located. One of the files contains cities (PK and name) and the other contains hotels (PK, FK to city and name).
 
-.. image:: https://github.com/user-attachments/assets/4233186f-0567-4fc3-b61a-f063308856fb
-
-In this Django project, these tables are represented as models and the data is stored in a MySQL database.
+In this Django project, these datasources are represented as models and the data is stored in a MySQL database.
 
 Custom management command
 #########################
