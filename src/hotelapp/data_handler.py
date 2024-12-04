@@ -10,17 +10,14 @@ class DataHandler:
     URL_CITY = config('URL_CITY')
     URL_HOTEL = config('URL_HOTEL')
 
-    def __init__(self, django_app, db_model_name):
+    def __init__(self, db_model_name):
         """
         Class for handling all data-related actions like fetching, parsing and writing data.
         """
 
         self.response = None
         self.df = None
-        self.django_app = django_app
         self.db_model_name = db_model_name
-        self.db_model = apps.get_model(self.django_app, self.db_model_name)
-        self.db_model_column_names = [f.name for f in self.db_model._meta.fields]
 
     def fetch_data(self):
         """
@@ -46,7 +43,10 @@ class DataHandler:
         """
 
         data = StringIO(self.response.text)
-        self.df = pd.read_csv(data, delimiter=";", header=None, names=self.db_model_column_names)
+        if self.db_model_name == 'City':
+            self.df = pd.read_csv(data, delimiter=";", header=None, names=['code', 'name'])
+        if self.db_model_name == 'Hotel':
+            self.df = pd.read_csv(data, delimiter=";", header=None, names=['city_code', 'code', 'name'])
 
     def write_to_db(self):
         """
@@ -55,9 +55,10 @@ class DataHandler:
 
         if self.db_model_name == 'City':
             for _, row in self.df.iterrows():
-                City.objects.get_or_create(**row)
+                City.objects.create(**row)
 
         if self.db_model_name == 'Hotel':
+            cities = City.objects.all()
             for _, row in self.df.iterrows():
-                row['city'] = City.objects.get(pk=row['city'])
-                Hotel.objects.get_or_create(**row)
+                matching_city = cities.get(code=row['city_code'])
+                Hotel.objects.create(**row, city=matching_city)

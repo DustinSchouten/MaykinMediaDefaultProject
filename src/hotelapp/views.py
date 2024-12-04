@@ -12,12 +12,12 @@ class Index(View):
         """
 
         # Get all hotel objects with all related city objects into it.
-        model_objects = Hotel.objects.select_related('city').all()
+        model_objects = Hotel.objects.all()
 
         # Get list with all available city names
-        city_names = list(City.objects.values_list('name', flat=True))
+        city_names = [c.name for c in City.objects.all()]
 
-        return render(request, "HotelApp/index.html", {"model_objects": model_objects, "city_names": city_names})
+        return render(request, "hotelapp/index.html", {"model_objects": model_objects, "city_names": city_names})
 
     def post(self, request):
         """
@@ -29,15 +29,16 @@ class Index(View):
         city_form = CityForm(request.POST)
 
         # Get list with all available city names
-        city_names = list(City.objects.values_list('name', flat=True))
+        city_names = [c.name for c in City.objects.all()]
 
         if city_form.is_valid():
-            city_filter = request.POST.get('city')
+            city_filter = request.POST['city']
 
             # Use the city filter to get all hotel objects from that specific city
-            model_objects = Hotel.objects.select_related('city').filter(city__name__iexact=city_filter)
+            model_objects = Hotel.objects.filter(city__name=city_filter)
 
-            return render(request, "HotelApp/index.html", {"model_objects": model_objects, "city_names": city_names})
+            return render(request, "hotelapp/index.html", {"model_objects": model_objects, "city_names": city_names})
 
-        model_objects = Hotel.objects.select_related('city').all()
-        return render(request, "HotelApp/index.html", {"model_objects": model_objects, "city_names": city_names})
+        model_objects = Hotel.objects.all()
+
+        return render(request, "hotelapp/index.html", {"model_objects": model_objects, "city_names": city_names})

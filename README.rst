@@ -85,7 +85,7 @@ This file contains all HTML-content for showing the city input filter and the re
 
 Tests
 #####
-In this project, seven unit tests are added in ``tests.py``. These tests can be easily run with the command ``python manage.py test HotelApp`` in the terminal.
+In this project, all of the unit tests are added in ``tests.py``. These tests can be easily run with the command ``python manage.py test HotelApp`` in the terminal.
 
 References
 ==========

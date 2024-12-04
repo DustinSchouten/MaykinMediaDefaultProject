@@ -122,7 +122,7 @@ INSTALLED_APPS = [
     # Project applications.
     "maykinmedia.accounts",
     "maykinmedia.utils",
-    "HotelApp.apps.HotelappConfig",
+    "hotelapp.apps.HotelappConfig",
 ]
 
 MIDDLEWARE = [

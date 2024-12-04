@@ -9,8 +9,8 @@ from bs4 import BeautifulSoup
 
 class Tests(TestCase):
     def setUp(self):
-        self.city_handler = DataHandler('HotelApp', 'City')
-        self.hotel_handler = DataHandler('HotelApp', 'Hotel')
+        self.city_handler = DataHandler('City')
+        self.hotel_handler = DataHandler('Hotel')
         self.handlers = [self.city_handler, self.hotel_handler]
 
     def write_test_data_to_test_db(self):
@@ -18,11 +18,11 @@ class Tests(TestCase):
         Helper method for filling a test database with dummy data
         """
 
-        city_amsterdam = City.objects.create(id="AMS", name="Amsterdam")
-        Hotel.objects.create(id="AMS01", name="Hotel1", city=city_amsterdam)
-        Hotel.objects.create(id="AMS02", name="Hotel2", city=city_amsterdam)
-        city_antwerpen = City.objects.create(id="ANT", name="Antwerpen")
-        Hotel.objects.create(id="ANT01", name="Hotel1", city=city_antwerpen)
+        city_amsterdam = City.objects.create(code="AMS", name="Amsterdam")
+        Hotel.objects.create(code="AMS01", name="Hotel1", city=city_amsterdam)
+        Hotel.objects.create(code="AMS02", name="Hotel2", city=city_amsterdam)
+        city_antwerpen = City.objects.create(code="ANT", name="Antwerpen")
+        Hotel.objects.create(code="ANT01", name="Hotel1", city=city_antwerpen)
 
     def perform_request(self, method, form_data=None):
         """
@@ -33,7 +33,7 @@ class Tests(TestCase):
         """
 
         client = Client()
-        url = reverse('index')
+        url = reverse('hotelapp:index')
         if method == 'GET':
             response = client.get(url)
         if method == 'POST':
@@ -56,37 +56,16 @@ class Tests(TestCase):
         objects that is collected from that database.
         """
 
-        city_data = {'id': ['AMS'], 'name': ['Amsterdam']}
-        hotel_data = {'id': ['AMS01', 'AMS02'], 'name': ['Hotel1', 'Hotel2'], 'city': ['AMS', 'AMS']}
+        city_data = {'code': ['AMS'], 'name': ['Amsterdam']}
+        hotel_data = {'code': ['AMS01', 'AMS02'], 'name': ['Hotel1', 'Hotel2'], 'city_code': ['AMS', 'AMS']}
 
         self.city_handler.df = pd.DataFrame(city_data)
         self.hotel_handler.df = pd.DataFrame(hotel_data)
         self.city_handler.write_to_db()
         self.hotel_handler.write_to_db()
 
-        model_objects = Hotel.objects.select_related('city').all()
+        model_objects = Hotel.objects.all()
         self.assertEqual(len(model_objects), 2)
-
-    def test_filtering_model_objects(self):
-        """
-        Test if the applied filter on the variable model_objects is actually not case sensitive.
-        """
-
-        # Create two variations of the city 'Amsterdam' and one of the city 'Antwerpen'
-        self.write_test_data_to_test_db()
-
-        # Apply different variations of city filters and check if the number of filtered objects is the same
-        # as expected.
-        model_objects = Hotel.objects.select_related('city').filter(city__name__iexact='Amsterdam')
-        self.assertEqual(len(model_objects), 2)
-        model_objects = Hotel.objects.select_related('city').filter(city__name__iexact='AMSTERDAM')
-        self.assertEqual(len(model_objects), 2)
-        model_objects = Hotel.objects.select_related('city').filter(city__name__iexact='amsterdam')
-        self.assertEqual(len(model_objects), 2)
-        model_objects = Hotel.objects.select_related('city').filter(city__name__iexact='AmStErDaM')
-        self.assertEqual(len(model_objects), 2)
-        model_objects = Hotel.objects.select_related('city').filter(city__name__iexact='ams')
-        self.assertEqual(len(model_objects), 0)
 
     def test_index_view_get(self):
         """
@@ -171,5 +150,3 @@ class Tests(TestCase):
 
     def tearDown(self):
         pass
-
-

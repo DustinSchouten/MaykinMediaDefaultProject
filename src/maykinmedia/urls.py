@@ -12,6 +12,7 @@ from maykin_2fa.urls import urlpatterns, webauthn_urlpatterns
 from mozilla_django_oidc_db.views import AdminLoginFailure
 
 from maykinmedia.accounts.views.password_reset import PasswordResetView
+from two_factor.urls import namespace
 
 # Configure admin
 
@@ -56,7 +57,8 @@ urlpatterns = [
         name="password_reset_complete",
     ),
     # Simply show the master template.
-    path("", TemplateView.as_view(template_name="master.html"), name="root"),
+    # path("", TemplateView.as_view(template_name="master.html"), name="root"),
+    path('', include("hotelapp.urls"))
 ]
 
 # NOTE: The staticfiles_urlpatterns also discovers static files (ie. no need to run collectstatic). Both the static
@@ -70,5 +72,4 @@ if settings.DEBUG and apps.is_installed("debug_toolbar"):
 
     urlpatterns = [
         path("__debug__/", include(debug_toolbar.urls)),
-        path('', include("HotelApp.urls"))
     ] + urlpatterns

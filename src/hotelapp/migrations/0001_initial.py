@@ -34,7 +34,7 @@ class Migration(migrations.Migration):
                     models.ForeignKey(
                         max_length=3,
                         on_delete=django.db.models.deletion.CASCADE,
-                        to="HotelApp.city",
+                        to="hotelapp.city",
                     ),
                 ),
             ],
