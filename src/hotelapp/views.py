@@ -1,6 +1,8 @@
 from django.shortcuts import render
 from django.views import View
-from .models import City, Hotel
+from django.views.generic import DetailView
+
+from .models import City, Hotel, Room
 from .forms import CityForm
 
 
@@ -12,12 +14,12 @@ class Index(View):
         """
 
         # Get all hotel objects with all related city objects into it.
-        model_objects = Hotel.objects.all()
+        hotel_objects = Hotel.objects.all()
 
         # Get list with all available city names
         city_names = [c.name for c in City.objects.all()]
 
-        return render(request, "hotelapp/index.html", {"model_objects": model_objects, "city_names": city_names})
+        return render(request, "hotelapp/index.html", {"hotel_objects": hotel_objects, "city_names": city_names})
 
     def post(self, request):
         """
@@ -25,7 +27,6 @@ class Index(View):
         stored data inside the model will be filtered with the city value.
         :return: The index page or an error page
         """
-
         city_form = CityForm(request.POST)
 
         # Get list with all available city names
@@ -35,10 +36,18 @@ class Index(View):
             city_filter = request.POST['city']
 
             # Use the city filter to get all hotel objects from that specific city
-            model_objects = Hotel.objects.filter(city__name=city_filter)
+            hotel_objects = Hotel.objects.filter(city__name=city_filter)
 
-            return render(request, "hotelapp/index.html", {"model_objects": model_objects, "city_names": city_names})
+            return render(request, "hotelapp/index.html", {"hotel_objects": hotel_objects, "city_names": city_names})
 
-        model_objects = Hotel.objects.all()
+        hotel_objects = Hotel.objects.all()
 
-        return render(request, "hotelapp/index.html", {"model_objects": model_objects, "city_names": city_names})
+        return render(request, "hotelapp/index.html", {"hotel_objects": hotel_objects, "city_names": city_names})
+
+
+class HotelDetails(DetailView):
+    model = Hotel
+    template_name = 'hotelapp/hoteldetails.html'
+    slug_field = 'uuid'
+    slug_url_kwarg = 'uuid'
+    context_object_name = 'hotel_object'

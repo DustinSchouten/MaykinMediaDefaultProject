@@ -20,15 +20,24 @@
 </section>
 
 <!-- Hotel results container -->
-<section class="container">
-    {% if model_objects.count > 0 %}
-    <p class="hotels_count_message">Number of results: <b>{{ model_objects.count }}</b></p>
+<section class="container results_container">
+    {% if hotel_objects.count > 0 %}
+        <p class="hotels_count_message">Number of results: <b>{{ hotel_objects.count }}</b></p>
         <ul class="hotels_list">
-            {% for model_object in model_objects %}
+            {% for hotel_object in hotel_objects %}
                 <li>
-                    <img class="hotel_icon" src="{% static 'HotelApp/img/hotel_icon.png' %}">
-                    <p class="hotel_name">{{ model_object.name }}</p>
-                    <p class="hotel_city">{{ model_object.city.name }}</p>
+                    <img class="hotel_image" src="{{ hotel_object.image_url }}">
+                    <a href="hoteldetails/{{ hotel_object.uuid }}" class="hotel_name">{{ hotel_object.name }}</a>
+                    <p class="hotel_city">{{ hotel_object.city.name }}</p>
+                    <p class="hotel_description">{{ hotel_object.description }}</p>
+                    <div class="hotel_bottom_div">
+                        {% if hotel_object.is_available %}
+                            <p class="hotel_is_available hotel_available_true">Available</p>
+                        {% else %}
+                            <p class="hotel_is_available hotel_available_false">Not available</p>
+                        {% endif %}
+                        <p class="hotel_price">€{{ hotel_object.price }}</p>
+                    </div>
                 </li>
             {% endfor %}
         </ul>
@@ -36,4 +45,5 @@
         <p class="no_hotels_found_message">No hotels found</p>
     {% endif %}
 </section>
+<script src="{% static 'hotelapp/js/javascript.js' %}"></script>
 {% endblock %}

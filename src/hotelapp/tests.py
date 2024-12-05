@@ -19,10 +19,10 @@ class Tests(TestCase):
         """
 
         city_amsterdam = City.objects.create(code="AMS", name="Amsterdam")
-        Hotel.objects.create(code="AMS01", name="Hotel1", city=city_amsterdam)
-        Hotel.objects.create(code="AMS02", name="Hotel2", city=city_amsterdam)
+        Hotel.objects.create(code="AMS01", name="Hotel1", city=city_amsterdam, price=12.34)
+        Hotel.objects.create(code="AMS02", name="Hotel2", city=city_amsterdam, price=12.34)
         city_antwerpen = City.objects.create(code="ANT", name="Antwerpen")
-        Hotel.objects.create(code="ANT01", name="Hotel1", city=city_antwerpen)
+        Hotel.objects.create(code="ANT01", name="Hotel1", city=city_antwerpen, price=12.34)
 
     def perform_request(self, method, form_data=None):
         """
