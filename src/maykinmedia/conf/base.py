@@ -33,7 +33,7 @@ USE_X_FORWARDED_HOST = config("USE_X_FORWARDED_HOST", default=False)
 IS_HTTPS = config("IS_HTTPS", default=not DEBUG)
 
 # Internationalization
-# https://docs.djangoproject.com/en/2.0/topics/i18n/
+# https://docs.djangoproject.com/en/2.0/topics/i18n/f
 
 LANGUAGE_CODE = "nl-nl"
 
@@ -122,7 +122,7 @@ INSTALLED_APPS = [
     # Project applications.
     "maykinmedia.accounts",
     "maykinmedia.utils",
-    "hotelapp.apps.HotelappConfig",
+    "hotels.apps.HotelsConfig",
 ]
 
 MIDDLEWARE = [
