@@ -1,9 +1,11 @@
+import random
+
 import requests
 import pandas as pd
 from io import StringIO
 from decouple import config
+
 from .models import City, Hotel, Room, Highlight
-import random
 
 
 class DataHandler:
@@ -55,7 +57,7 @@ class DataHandler:
 
         if self.db_model_name == 'City':
             for _, row in self.df.iterrows():
-                City.objects.create(**row)
+                City.objects.create(code=row['code'], name=row['name'])
 
         if self.db_model_name == 'Highlight':
             images = ['https://cdn-icons-png.flaticon.com/512/93/93158.png',  # Free wifi icon
@@ -78,7 +80,8 @@ class DataHandler:
                 description = f'This hotel named {row['name']} is the best hotel of {matching_city}'
                 is_available = random.choice([True, False])
                 image_url = images[idx%2]
-                hotel = Hotel(**row, city=matching_city, description=description, is_available=is_available, price=price, image_url=image_url)
+                hotel = Hotel(city_code=row['city_code'], code=row['code'], name=row['name'], city=matching_city,
+                              description=description, is_available=is_available, price=price, image_url=image_url)
                 hotel.save()
                 for highlight in all_highlights:
                     if random.random() < 0.5:
@@ -92,6 +95,9 @@ class DataHandler:
                             'The room with more comfort',
                             'The best and most luxurious room of the entire hotel!']
             for hotel in Hotel.objects.all():
-                Room.objects.create(hotel=hotel, name='Room classic', image_url=images[0], price=12.34, description=descriptions[0])
-                Room.objects.create(hotel=hotel, name='Room comfort', image_url=images[1], price=12.34, description=descriptions[1])
-                Room.objects.create(hotel=hotel, name='Room deluxe', image_url=images[2], price=12.34, description=descriptions[2])
+                Room.objects.create(hotel=hotel, name='Room classic', image_url=images[0], price=12.34,
+                                    description=descriptions[0])
+                Room.objects.create(hotel=hotel, name='Room comfort', image_url=images[1], price=12.34,
+                                    description=descriptions[1])
+                Room.objects.create(hotel=hotel, name='Room deluxe', image_url=images[2], price=12.34,
+                                    description=descriptions[2])

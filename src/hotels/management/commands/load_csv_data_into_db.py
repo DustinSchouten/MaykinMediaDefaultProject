@@ -1,12 +1,18 @@
 from django.core.management.base import BaseCommand
-from hotelapp.data_handler import DataHandler
-from hotelapp.models import City, Room, Highlight
+
+from ...data_handler import DataHandler
+from ...models import City, Room, Highlight
 
 
 class Command(BaseCommand):
     help = 'This command collects city and hotel data and writes it into the truncated database'
 
     def perform_model_steps(self, model_name):
+        """
+        Helper method for performing all steps that are in the data handler like fetching, parsing data and writing
+        data to a database.
+        :param model_name: string name of model
+        """
         handler = DataHandler(model_name)
         # Only for these two models, data is fetched from authenticated server
         if model_name in ['City', 'Hotel']:

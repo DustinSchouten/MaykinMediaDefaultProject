@@ -1,10 +1,12 @@
-import pandas as pd
 from django.test import TestCase
-from .models import City, Hotel
-from .data_handler import DataHandler
 from django.test import Client
 from django.urls import reverse
+
 from bs4 import BeautifulSoup
+import pandas as pd
+
+from ..models import City, Hotel
+from ..data_handler import DataHandler
 
 
 class Tests(TestCase):
@@ -12,17 +14,6 @@ class Tests(TestCase):
         self.city_handler = DataHandler('City')
         self.hotel_handler = DataHandler('Hotel')
         self.handlers = [self.city_handler, self.hotel_handler]
-
-    def write_test_data_to_test_db(self):
-        """
-        Helper method for filling a test database with dummy data
-        """
-
-        city_amsterdam = City.objects.create(code="AMS", name="Amsterdam")
-        Hotel.objects.create(code="AMS01", name="Hotel1", city=city_amsterdam, price=12.34)
-        Hotel.objects.create(code="AMS02", name="Hotel2", city=city_amsterdam, price=12.34)
-        city_antwerpen = City.objects.create(code="ANT", name="Antwerpen")
-        Hotel.objects.create(code="ANT01", name="Hotel1", city=city_antwerpen, price=12.34)
 
     def perform_request(self, method, form_data=None):
         """
@@ -33,7 +24,7 @@ class Tests(TestCase):
         """
 
         client = Client()
-        url = reverse('hotelapp:index')
+        url = reverse('hotels:index')
         if method == 'GET':
             response = client.get(url)
         if method == 'POST':
@@ -73,7 +64,12 @@ class Tests(TestCase):
         The response HTML template should have all three <li> tags and it should NOT have a 'No hotels found' message.
         """
 
-        self.write_test_data_to_test_db()
+        # self.write_test_data_to_test_db()
+        city_amsterdam = City.objects.create(code="AMS", name="Amsterdam")
+        Hotel.objects.create(code="AMS01", name="Hotel1", city=city_amsterdam, price=12.34)
+        Hotel.objects.create(code="AMS02", name="Hotel2", city=city_amsterdam, price=12.34)
+        city_antwerpen = City.objects.create(code="ANT", name="Antwerpen")
+        Hotel.objects.create(code="ANT01", name="Hotel1", city=city_antwerpen, price=12.34)
 
         # Simulate a GET request and use BeautifulSoup to collect the html content of the response
         soup = self.perform_request('GET')
@@ -94,7 +90,12 @@ class Tests(TestCase):
         The response HTML template should have only one <li> tag and it should NOT have a 'No hotels found' message.
         """
 
-        self.write_test_data_to_test_db()
+        # self.write_test_data_to_test_db()
+        city_amsterdam = City.objects.create(code="AMS", name="Amsterdam")
+        Hotel.objects.create(code="AMS01", name="Hotel1", city=city_amsterdam, price=12.34)
+        Hotel.objects.create(code="AMS02", name="Hotel2", city=city_amsterdam, price=12.34)
+        city_antwerpen = City.objects.create(code="ANT", name="Antwerpen")
+        Hotel.objects.create(code="ANT01", name="Hotel1", city=city_antwerpen, price=12.34)
 
         # Simulate a POST request and use BeautifulSoup to collect the html content of the response
         form_data = {'city': 'Antwerpen'}
@@ -116,7 +117,12 @@ class Tests(TestCase):
         template should have all three <li> tags and it should NOT have a 'No hotels found' message.
         """
 
-        self.write_test_data_to_test_db()
+        # self.write_test_data_to_test_db()
+        city_amsterdam = City.objects.create(code="AMS", name="Amsterdam")
+        Hotel.objects.create(code="AMS01", name="Hotel1", city=city_amsterdam, price=12.34)
+        Hotel.objects.create(code="AMS02", name="Hotel2", city=city_amsterdam, price=12.34)
+        city_antwerpen = City.objects.create(code="ANT", name="Antwerpen")
+        Hotel.objects.create(code="ANT01", name="Hotel1", city=city_antwerpen, price=12.34)
 
         # Simulate a POST request and use BeautifulSoup to collect the html content of the response
         form_data = {'city': ''}
@@ -138,7 +144,12 @@ class Tests(TestCase):
         The response HTML template should have a 'No hotels found' message.
         """
 
-        self.write_test_data_to_test_db()
+        # self.write_test_data_to_test_db()
+        city_amsterdam = City.objects.create(code="AMS", name="Amsterdam")
+        Hotel.objects.create(code="AMS01", name="Hotel1", city=city_amsterdam, price=12.34)
+        Hotel.objects.create(code="AMS02", name="Hotel2", city=city_amsterdam, price=12.34)
+        city_antwerpen = City.objects.create(code="ANT", name="Antwerpen")
+        Hotel.objects.create(code="ANT01", name="Hotel1", city=city_antwerpen, price=12.34)
 
         # Simulate a POST request and use BeautifulSoup to collect the html content of the response
         form_data = {'city': 'Barcelona'}
