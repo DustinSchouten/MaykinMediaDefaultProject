@@ -6,6 +6,7 @@ python-decouple  # processing of envvar configs
 pandas
 bs4
 requests
+pillow
 
 
 # Framework librariesg
