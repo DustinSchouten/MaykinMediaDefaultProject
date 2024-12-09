@@ -6,24 +6,53 @@
     <h2>{{hotel_object.name}}</h2>
     <p class="hotel_description">This beautiful hotel named {{hotel_object.name}} in the centre of {{hotel_object.city.name}} is the best hotel in the world!</p>
     <img class="hotel_image" src="{{ hotel_object.image_url }}">
-    <ul class="highlights_list">
-        {% for highlight_object in hotel_object.highlights.all %}
-        <li>
-            <img class="highlight_image" src="{{ highlight_object.icon_url }}"/>
-            <p class="highlight_name">{{highlight_object.name}}</p>
-        </li>
-        {% endfor %}
-    </ul>
-    <h3>Hotel rooms:</h3>
-    <ul class="hotels_list">
-        {% for room_object in hotel_object.rooms.all %}
+    {% if hotel_object.highlights.count > 0 %}
+        <ul class="highlights_list">
+            {% for highlight_object in hotel_object.highlights.all %}
             <li>
-                <img class="hotel_image" src="{{ room_object.image_url }}">
-                <p class="hotel_name">{{ room_object.name }}</p>
-                <p class="hotel_price">€{{ room_object.price }}</p>
+                <!-- Render image or placeholder -->
+                {% if highlight_object.image %}
+                    <img class="highlight_image" src="{{ highlight_object.image.url }}">
+                {% else %}
+                    <img class="highlight_image" src="static/hotels/img/placeholder_icon.png">
+                {% endif %}
+
+                <p class="highlight_name">{{highlight_object.name}}</p>
             </li>
-        {% endfor %}
-    </ul>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p class="no_hotels_found_message">No highlights found</p>
+    {% endif %}
+
+    <h3>Hotel rooms:</h3>
+        {% if hotel_object.rooms.count > 0 %}
+            <ul class="hotels_list">
+                {% for room_object in hotel_object.rooms.all %}
+                    <li>
+                        <!-- Render image or placeholder -->
+                        {% if room_object.image %}
+                            <img class="hotel_image" src="{{ room_object.image.url }}">
+                        {% else %}
+                            <img class="hotel_image" src="static/hotels/img/hotel_icon.png">
+                        {% endif %}
+
+                        <p class="hotelroom_name">{{ room_object.name }}</p>
+
+                        <!-- Render price or placeholder -->
+                        {% if room_object.price %}
+                            <p class="hotel_price">€{{ room_object.price }}</p>
+                        {% else %}
+                            <p class="hotel_price">€0.0</p>
+                        {% endif %}
+
+                        <a href="/reservation" class="button">Book now!</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p class="no_hotels_found_message">No rooms found</p>
+        {% endif %}
 </section>
 {% endblock %}
 
