@@ -51,3 +51,18 @@ class Room(models.Model):
 
     def __str__(self):
         return f"{self.name} ({self.hotel.name})"
+
+
+class Reservation(models.Model):
+    hotel_room = models.CharField(max_length=255)
+    start_date = models.DateField()
+    end_date = models.DateField()
+    first_name = models.CharField(max_length=255)
+    last_name = models.CharField(max_length=255)
+    email_address = models.EmailField()
+    address = models.CharField(max_length=255)
+    postal_code = models.CharField(max_length=6)
+    country = models.CharField(max_length=255)
+
+    def __str__(self):
+        return f"{self.first_name} {self.last_name}"

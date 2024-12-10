@@ -1,0 +1,19 @@
+{% extends "hotels/base.html" %}
+{% load static %}
+
+{% block content %}
+
+<section class="container">
+    <h2>Order your stay at {{ request.session.hotel_name }}</h2>
+        <p class="reservation_info"><b>Your stay:</b> from {{ request.session.start_date }} until {{ request.session.end_date }}</p>
+        <p class="reservation_info"><b>Room type:</b> {{ request.session.room_name }}</p>
+        <p class="reservation_info"><b>Total costs:</b> €{{ request.session.room_total_costs }}</p>
+
+        <form method="post" class="reservation_form">
+            {% csrf_token %}
+            {{ form }}
+            <input type="submit" id="button_submit_reservation_form" class="button" value="Confirm my order" />
+        </form>
+</section>
+{% endblock %}
+

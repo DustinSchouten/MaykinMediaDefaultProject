@@ -49,7 +49,7 @@ h2, h3 {
 }
 
 /* City search form styles */
-form div {
+#city_form div {
     display: flex;
     margin-top: 10px;
 }
@@ -77,6 +77,20 @@ input[type=submit] {
     color: var(--darkblue);
     border-radius: 5px;
     border: 1px solid var(--darkblue);
+}
+
+.button {
+    color: white;
+    background-color: var(--darkblue);
+    padding: 10px;
+    margin-top: 10px;
+    display: block;
+    width: fit-content;
+    float: right;
+    border-radius: 5px;
+    font-weight: bold;
+    text-decoration: none;
+    font-size: 1.2em;
 }
 
 .hotels_list {
@@ -116,7 +130,7 @@ input[type=submit] {
     border-radius: 5px;
 }
 
-.hotels_list li .hotel_name {
+.hotels_list li .hotel_name, .hotels_list li .hotelroom_name {
     font-weight: bold;
     word-break: break-word;
     font-style: italic;
@@ -189,4 +203,46 @@ input[type=submit] {
 .highlights_list li .highlight_image {
     width: 20px;
     padding-right: 10px;
+}
+
+/* Reservation styles */
+
+.reservation_form > label {
+    margin: 15px 0 5px;
+}
+
+#id_hotel_room label {
+    font-weight: normal;
+    margin-top: 5px;
+}
+
+.reservation_form input[type='date'] {
+    border: 1px solid var(--darkblue);
+    border-radius: 5px;
+    font-size: 1.2em;
+    padding: 10px;
+    width: 200px;
+}
+
+.reservation_info {
+    margin: 5px 0;
+}
+
+.reservation_form input:not([type="submit"]):not([type="date"]):not([type="radio"]), .reservation_form select {
+    display: block;
+    width: calc(100% - 20px);
+    font-size: 1.2em;
+    padding: 10px;
+    border: 1px solid var(--darkblue);
+    border-radius: 5px;
+    background-color: white;
+}
+
+.reservation_form select {
+    width: 100%;
+}
+
+#button_submit_reservation_form {
+    float: none;
+    margin-top: 20px;
 }

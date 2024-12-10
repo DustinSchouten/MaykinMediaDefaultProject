@@ -4,7 +4,7 @@
 {% block content %}
 <!-- City input container -->
 <section class="container">
-    <form method="post">
+    <form method="post" id="city_form">
         {% csrf_token %}
         <label for="city">Filter city:</label>
         <div>
