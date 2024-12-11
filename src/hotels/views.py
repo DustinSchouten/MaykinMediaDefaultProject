@@ -4,6 +4,8 @@ from django.shortcuts import render
 from django.views import View
 from django.views.generic import DetailView, FormView
 from django.urls import reverse
+from django.core.mail import send_mail
+from django.conf import settings
 
 from .models import City, Hotel, Reservation
 from .forms import CityForm, ReservationForm1, ReservationForm2
@@ -96,6 +98,7 @@ class ReservationStep1(FormView):
         room_total_costs = room_nights * room_object.price
 
         self.request.session.update({
+            'city_name': str(hotel_object.city.name),
             'hotel_name': str(hotel_object.name),
             'room_name': str(room_object.name),
             'room_total_costs': str(room_total_costs),
@@ -113,15 +116,38 @@ class ReservationStep2(FormView):
     def form_valid(self, form):
         # Collect the data of the first reservation page which is stored in a session
         session_data = dict(self.request.session)
+        city_name = session_data['city_name']
+        hotel_name = session_data['hotel_name']
+        hotel_room = session_data['room_name']
+        start_date = datetime.strptime(session_data['start_date'], '%d-%m-%Y').date()
+        end_date = datetime.strptime(session_data['end_date'], '%d-%m-%Y').date()
+
         # Collect the formdata of the second reservation page
         form_data = form.cleaned_data
+        first_name = form_data['first_name']
+        last_name = form_data['last_name']
+        email_address = form_data['email_address']
+        address = form_data['address']
+        postal_code = form_data['postal_code']
+        country = form_data['country']
+
         # Create a new Reservation object with all collected data and store it into the database
-        Reservation.objects.create(hotel_room=session_data['room_name'],
-                                   start_date=datetime.strptime(session_data['start_date'], '%d-%m-%Y').date(),
-                                   end_date=datetime.strptime(session_data['end_date'], '%d-%m-%Y').date(),
-                                   first_name=form_data['first_name'], last_name=form_data['last_name'],
-                                   email_address= form_data['email_address'], address=form_data['address'],
-                                   postal_code=form_data['postal_code'], country=form_data['country'])
+        Reservation.objects.create(hotel_room=hotel_room, start_date=start_date, end_date=end_date,
+                                   first_name=first_name, last_name=last_name, email_address=email_address,
+                                   address=address, postal_code=postal_code, country=country)
+
+        # Email the customer and the hotel reception
+        email_subject = 'Your reservation is confirmed!'
+        email_message = (f'Dear {first_name} {last_name}. \n'
+                         f'Your reservation for {hotel_name} (room: {hotel_room}) in {city_name} has been confirmed! \n'
+                         f'Your stay is from {start_date} to {end_date}. \n'
+                         f"We can't wait to welcome you to our nice hotel in the centre of {city_name}! \n"
+                         f"Yours sincerely \n"
+                         f"The HotelApp maker.")
+
+        send_mail(email_subject, email_message, settings.EMAIL_HOST_USER, [email_address,
+                                                                           settings.DEFAULT_FROM_EMAIL])
+
         # Clear the session after storing the data
         self.request.session.clear()
 
